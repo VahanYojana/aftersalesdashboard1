@@ -120,37 +120,37 @@
                 <p>Mobile: +91 9262725444</p>
             </div>
             <div class="form-group">
-                <label for="employee_id">Employee ID</label>
                 <input type="text" id="employee_id" placeholder="Employee ID" required>
             </div>
             <div class="form-group">
-                <label for="employee_name">Employee Name</label>
                 <input type="text" id="employee_name" placeholder="Employee Name" required>
             </div>
             <div class="form-group">
-                <label for="entry_date">Entry Date</label>
-                <input type="date" id="entry_date" placeholder="Entry Date" required>
+                <input type="date" id="date" placeholder="Date" required>
             </div>
+           
             <div class="form-group">
-                <label for="after-sales-type"> Select Vehicle Type</label>
-                <select id="after-sales-type"   required>>
-                    <option value="">Select Vehicle Type</option>
-                    <option value="two_wheeler">Two Wheeler</option>
-                    <option value="three_wheeler">Three Wheeler</option>
-                    <option value="four_wheeler">Four Wheeler</option>
-                </select>
-            </div>
-            <button onclick="submitForm()">Next</button> 
-        </div>
 
-        <!-- After Sales Details Card -->
-        <div class="card" id="aftersales-details" style="display: none;">
+            <select id="vehicle-type" onchange="selectPage(this.value)" required>
+                <option value="">Select Vehicle Type</option>
+                <option value="two_wheeler">Two Wheeler</option>
+                <option value="three_wheeler">Three Wheeler</option>
+                <option value="four_wheeler">Four Wheeler</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+    </div>
+    <div class="card" id="aftersales-details" style="display: none;">
             <h2>After Sales Details</h2>
             
-            <h2>Customer Details</h2>
+            <h2 id="vehicle-title">Customer Details</h2>
             <div class="form-group">
                 <label for="as_customer_name">Customer Name</label>
                 <input type="text" id="as_customer_name" placeholder="Customer Name" required>
+            </div>
+            <div class="form-group">
+                <label for="as_mobile">Mobile Number</label>
+                <input type="text" id="as_mobile" placeholder="Mobile Number" pattern="\d{10}" maxlength="10" required>
             </div>
             <div class="form-group">
                 <label for="as_district">District</label>
@@ -161,9 +161,10 @@
                 <input type="text" id="as_block" placeholder="Block" required>
             </div>
             <div class="form-group">
-                <label for="as_mobile">Mobile Number</label>
-                <input type="text" id="as_mobile" placeholder="Mobile Number" pattern="\d{10}" maxlength="10" required>
+                <label for="as_address">Address</label>
+                <input type="text" id="as_address" class="full-width" placeholder="Address" required>
             </div>
+            
             <div class="form-group">
                 <label for="as_account_number">Account Number</label>
                 <input type="text" id="as_account_number" placeholder="Account Number" required>
@@ -210,11 +211,11 @@
                 <input type="number" id="as_hypo" placeholder="Hypo" required>
             </div>
             <div class="form-group">
-                <label for="as_ews">EWS</label>
-                <input type="number" id="as_ews" placeholder="EWS" required>
+                <label for="as_ews">Apply Fee + EWS  + Road side Assistance  </label>
+                <input type="number" id="as_ews" placeholder="Apply Fee + EWS  + Road side Assistance  " required>
             </div>
             <div class="form-group">
-                <label for="as_agreement_paper">Agreement Paper</label>
+                <label for="as_agreement_paper">Agreement Paper Fee</label>
                 <input type="number" id="as_agreement_paper" placeholder="Agreement Paper" required>
             </div>
             <div class="form-group">
@@ -364,40 +365,27 @@
 <footer class="footer">
     &copy; 2024 Vahan Yojana. All rights reserved.
 </footer>
-
 <script>
-
-    // Function to submit the Employee form
-    function submitForm() {
-        const employeeId = document.getElementById('employee_id').value.trim();
-        const employeeName = document.getElementById('employee_name').value.trim();
-        const date = document.getElementById('entry_date').value;
-
-        // Check if the Employee ID, Employee Name, and Date are filled
+    function selectPage(page) {
+        const employeeId = document.getElementById('employee_id').value;
+        const employeeName = document.getElementById('employee_name').value;
+        const date = document.getElementById('date').value;
+    
+        // Validate Employee ID, Employee Name, and Date
         if (!employeeId || !employeeName || !date) {
-            alert('Please fill out Employee ID, Employee Name, and Entry Date.');
+            alert('Please fill out Employee ID, Employee Name, and Date before selecting a vehicle type.');
+            document.getElementById('vehicle-type').value = ''; // Reset the vehicle type dropdown
             return;
         }
-
-        // Proceed to After Sales Details
-        goToAfterSalesDetails();
-    }
-
-    function goToAfterSalesDetails() {
-        const vehicleType = document.getElementById('after-sales-type').value;
-
-        if (!vehicleType) {
-            alert("Please select a vehicle type.");
-            return;
-        }
-
-        // Hide Employee Details and show After Sales Details
+    
+        // Hide all pages and show the vehicle page
         document.getElementById('employee-details').style.display = 'none';
         document.getElementById('aftersales-details').style.display = 'block';
+    
+        // Change the title based on vehicle type
+        document.getElementById('vehicle-title').innerText =`${page.replace('_', ' ').toLowerCase()} customer details`;
     }
-
-
-    // Function to toggle payment options
+    
     function togglePaymentOptions(paymentType) {
         if (paymentType === 'partial') {
             document.getElementById('as_partial-payment').style.display = 'block';
@@ -410,47 +398,33 @@
             document.getElementById('as_full-payment').style.display = 'none';
         }
     }
-
+    
     // Function to toggle part details in partial payment
     function togglePartDetails(part) {
-        const partDetails = document.getElementById(`as_${part}-details`);
+        const partDetails = document.getElementById('as_${part}-details');
         if (partDetails) {
             partDetails.style.display = partDetails.style.display === 'none' ? 'block' : 'none';
         }
     }
-
+    
     // Function to navigate back to the Employee Details page
     function goBack() {
         document.getElementById('aftersales-details').style.display = 'none'; // Hide After Sales Details
         document.getElementById('employee-details').style.display = 'block'; // Show Employee Details
+        document.getElementById('vehicle-type').value = '';
     }
-
-    // Function to get query parameters from URL
-    function getQueryParam(param) {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get(param) || '';
-    }
-
-    // Populate Employee Details on load
-    window.onload = function() {
-        document.getElementById('display_employee_id').value = getQueryParam('employee_id');
-        document.getElementById('display_employee_name').value = getQueryParam('employee_name');
-        document.getElementById('display_entry_date').value = getQueryParam('entry_date');
-        const vehicleType = getQueryParam('after_sales_type').replace('_', ' ').replace(/\b\w/g, c => c.toUpperCase());
-        document.getElementById('display_vehicle_type').value = vehicleType;
-    }
-
-    // Function to validate After Sales form fields
+    
     function validateAftersalesFields() {
         const requiredFields = [
+            'employee_id', 'employee_name', 'date', 'vehicle-type',
             'as_customer_name', 'as_district', 'as_block', 'as_mobile', 'as_account_number',
             'as_ifsc_code', 'as_address', 'as_vehicle_name', 'as_on_road_price',
-            'as_ex_showroom_price', 'as_discount', 'as_rto',
-            'as_insurance', 'as_hypo', 'as_ews', 'as_agreement_paper', 'as_processing_fee', 'as_showroom_pay',
+            'as_ex_showroom_price', 'as_discount', 'as_rto', 'as_insurance', 'as_hypo',
+            'as_ews', 'as_agreement_paper', 'as_processing_fee', 'as_showroom_pay',
             'as_emi_amount', 'as_emi_date', 'as_tenure', 'as_discounted_on_road_price',
             'as_date_of_purchase', 'as_payment_type'
         ];
-
+    
         for (let field of requiredFields) {
             const value = document.getElementById(field).value.trim();
             if (!value) {
@@ -458,7 +432,7 @@
                 return false;
             }
         }
-
+    
         // Validate mobile number
         const mobile = document.getElementById('as_mobile').value.trim();
         const mobilePattern = /^\d{10}$/;
@@ -466,20 +440,21 @@
             alert('Please enter a valid 10-digit mobile number.');
             return false;
         }
-
+    
         // Validate payment details
         const paymentType = document.getElementById('as_payment_type').value;
         if (paymentType === 'partial') {
             const part1 = document.getElementById('as_part1').value.trim();
-
+    
             if (!part1) {
                 alert('Please fill partial payment amounts.');
                 return false;
             }
-            // Validate part details if they are filled
+    
+            // Validate part1 details
             const part1Date = document.getElementById('as_part1_date').value.trim();
             const part1Mode = document.getElementById('as_part1_mode').value.trim();
-
+    
             if (!part1Date || !part1Mode) {
                 alert('Please fill partial payment details.');
                 return false;
@@ -488,28 +463,38 @@
             const fullAmount = document.getElementById('as_full_amount').value.trim();
             const fullDate = document.getElementById('as_full_date').value.trim();
             const fullMode = document.getElementById('as_full_mode').value.trim();
+    
             if (!fullAmount || !fullDate || !fullMode) {
                 alert('Please fill all full payment details.');
                 return false;
             }
         }
-
+    
         return true; // Validation passed
     }
-
-    // Function to submit After Sales form
+    
     function submitAfterSalesForm() {
-        // Validate form fields
-        if (!validateAftersalesFields()) {
-            return; // Stop submission if validation fails
+        const employeeId = document.getElementById('employee_id').value;
+        const employeeName = document.getElementById('employee_name').value;
+        const date = document.getElementById('date').value;
+    
+        // Check if the Employee ID, Employee Name, and Date are filled
+        if (!employeeId || !employeeName || !date) {
+            alert('Please fill out Employee ID, Employee Name, and Date.');
+            return;
         }
-
-        // Collect data
+    
+        // Validate fields specific to the vehicle form
+        if (!validateAftersalesFields()) {
+            return; // Stop the form submission if validation fails
+        }
+    
+        // Gather data from the single form
         const data = {
-            employee_id: getQueryParam('employee_id').value.trim(),
-            employee_name: getQueryParam('employee_name').value.trim(),
-            entry_date: getQueryParam('entry_date').value.trim(),
-            after_sales_type: getQueryParam('after_sales_type'),
+            employee_id: document.getElementById('employee_id').value.trim(),
+            employee_name: document.getElementById('employee_name').value.trim(),
+            entry_date: document.getElementById('date').value.trim(),
+            after_sales_type: document.getElementById('vehicle-type').value.trim(),
             as_customer_name: document.getElementById('as_customer_name').value.trim(),
             as_district: document.getElementById('as_district').value.trim(),
             as_block: document.getElementById('as_block').value.trim(),
@@ -535,7 +520,7 @@
             as_emi_date: document.getElementById('as_emi_date').value.trim(),
             as_date_of_purchase: document.getElementById('as_date_of_purchase').value.trim(),
         };
-
+    
         // Handle partial payment details
         if (data.as_payment_type === 'partial') {
             data.as_part1_amount = document.getElementById('as_part1').value.trim();
@@ -547,27 +532,25 @@
             data.as_part3_amount = document.getElementById('as_part3').value.trim();
             data.as_part3_date = document.getElementById('as_part3_date').value.trim();
             data.as_part3_mode = document.getElementById('as_part3_mode').value.trim();
-        } else if (data.as_payment_type === 'full') {
+        }
+    
+        // Handle full payment details
+        if (data.as_payment_type === 'full') {
             data.as_full_amount = document.getElementById('as_full_amount').value.trim();
             data.as_full_date = document.getElementById('as_full_date').value.trim();
             data.as_full_mode = document.getElementById('as_full_mode').value.trim();
         }
-
-        // Post data to server (Replace with your actual endpoint)
-        fetch('https://your-api-endpoint.com/submit', {
+    
+        // Use fetch API to submit the form data
+            fetch('https://script.google.com/macros/s/AKfycbzXmV_NmN8mjS1y-LMjXoQcycOJnP-Pv0FVADtUM8_8TAkS5GykR-i028eVOsoABZlFxg/exec', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded',
             },
-            body: JSON.stringify(data)
+            body: new URLSearchParams(data)
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
+        .then(response => response.json()) // This will work in CORS mode
+        .then(result => {
             alert('Aftersales Form Submitted Successfully!');
             resetForm();
         })
@@ -575,24 +558,12 @@
             console.error('Error!', error.message);
             alert('There was an error submitting the form. Please try again.');
         });
-    }
 
-    // Function to reset the form
-    function resetForm() {
-        if (confirm('Are you sure you want to reset the form? All data will be lost.')) {
-            document.getElementById('employee-details').reset();
-            document.getElementById('aftersales-details').reset();
-            document.getElementById('as_partial-payment').style.display = 'none';
-            document.getElementById('as_full-payment').style.display = 'none';
-
-            ['part1', 'part2', 'part3'].forEach(part => {
-                const partDetails = document.getElementById(`as_${part}-details`);
-                if (partDetails) {
-                    partDetails.style.display = 'none';
-                }
-            });
-        }
     }
 </script>
+    
+
+
+
 </body>
 </html>
