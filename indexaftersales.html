@@ -236,6 +236,10 @@
                 <input type="date" id="as_emi_date" placeholder="EMI Date" required>
             </div>
             <div class="form-group">
+                <label for="as_emi_last_date">EMI Last Date</label>
+                <input type="date" id="as_emi_last_date" placeholder="EMI Last Date" required>
+            </div>
+            <div class="form-group">
                 <label for="as_tenure">Tenure</label>
                 <input type="number" id="as_tenure" placeholder="Tenure" required>
             </div>
@@ -417,7 +421,7 @@
             'as_ifsc_code', 'as_address', 'as_vehicle_name', 'as_on_road_price',
             'as_ex_showroom_price', 'as_discount', 'as_rto', 'as_insurance', 'as_hypo',
             'as_ews', 'as_agreement_paper', 'as_processing_fee', 'as_showroom_pay',
-            'as_emi_amount', 'as_emi_date', 'as_tenure', 'as_discounted_on_road_price',
+            'as_emi_amount', 'as_emi_date', 'as_emi_last_date','as_tenure', 'as_discounted_on_road_price',
             'as_date_of_purchase', 'as_payment_type'
         ];
     
@@ -514,6 +518,7 @@
             as_showroom_pay: document.getElementById('as_showroom_pay').value.trim(),
             as_emi_amount: document.getElementById('as_emi_amount').value.trim(),
             as_emi_date: document.getElementById('as_emi_date').value.trim(),
+            as_emi_last_date: document.getElementById('as_emi_last_date').value.trim(),
             as_date_of_purchase: document.getElementById('as_date_of_purchase').value.trim(),
         };
     
