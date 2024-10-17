@@ -509,22 +509,23 @@
             const part2 = document.getElementById('as_part2').value.trim();
             const part3 = document.getElementById('as_part3').value.trim();
     
-            if (!part1 && !part2 && !part3) {
+                        if (!part1 && !part2 && !part3) {
                 alert('Please fill at least one partial payment amount.');
                 return false;
             }
-    
-            // If any part is filled, ensure its details are also filled
-            for (let part = 1; part <=3; part++) {
-                const amount = document.getElementById('as_part${part}').value.trim();
-                if (amount) {
-                    const date = document.getElementById('as_part${part}_date').value.trim();
-                    const mode = document.getElementById('as_part${part}_mode').value.trim();
-                    if (!date || !mode) {
-                        alert('Please fill the date and mode for Part ${part} payment.');
-                        return false;
-                    }
-                }
+
+            // Ensure date and mode for each part are validated only if the respective amount is filled
+            if (part1 && (!document.getElementById('as_part1_date').value.trim() || !document.getElementById('as_part1_mode').value.trim())) {
+                alert('Please fill the date and mode for Part 1 payment.');
+                return false;
+            }
+            if (part2 && (!document.getElementById('as_part2_date').value.trim() || !document.getElementById('as_part2_mode').value.trim())) {
+                alert('Please fill the date and mode for Part 2 payment.');
+                return false;
+            }
+            if (part3 && (!document.getElementById('as_part3_date').value.trim() || !document.getElementById('as_part3_mode').value.trim())) {
+                alert('Please fill the date and mode for Part 3 payment.');
+                return false;
             }
         } else if (paymentType === 'full') {
             const fullAmount = document.getElementById('as_full_amount').value.trim();
